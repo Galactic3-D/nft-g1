@@ -43,8 +43,8 @@ interface BattlePassInterface extends ethers.utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBaseURI(string)": FunctionFragment;
-    "setPublicSaleConfig(uint32,uint64)": FunctionFragment;
-    "setWhitelistSaleConfig(uint32,uint64,address)": FunctionFragment;
+    "setPublicSaleConfig(uint32)": FunctionFragment;
+    "setWhitelistSaleConfig(uint32,address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -121,11 +121,11 @@ interface BattlePassInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "setBaseURI", values: [string]): string;
   encodeFunctionData(
     functionFragment: "setPublicSaleConfig",
-    values: [BigNumberish, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setWhitelistSaleConfig",
-    values: [BigNumberish, BigNumberish, string]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -341,11 +341,10 @@ export class BattlePass extends BaseContract {
     config(
       overrides?: CallOverrides
     ): Promise<
-      [number, BigNumber, number, BigNumber, string] & {
+      [number, number, BigNumber, string] & {
         whitelistSaleStartTime: number;
-        whitelistPriceWei: BigNumber;
         publicSaleStartTime: number;
-        publicPriceWei: BigNumber;
+        priceWei: BigNumber;
         whitelistSigner: string;
       }
     >;
@@ -440,14 +439,17 @@ export class BattlePass extends BaseContract {
 
     setPublicSaleConfig(
       timestamp: BigNumberish,
-      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setWhitelistSaleConfig(
+    "setWhitelistSaleConfig(uint32,address)"(
       timestamp: BigNumberish,
-      price: BigNumberish,
       signer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "setWhitelistSaleConfig(uint64)"(
+      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -506,11 +508,10 @@ export class BattlePass extends BaseContract {
   config(
     overrides?: CallOverrides
   ): Promise<
-    [number, BigNumber, number, BigNumber, string] & {
+    [number, number, BigNumber, string] & {
       whitelistSaleStartTime: number;
-      whitelistPriceWei: BigNumber;
       publicSaleStartTime: number;
-      publicPriceWei: BigNumber;
+      priceWei: BigNumber;
       whitelistSigner: string;
     }
   >;
@@ -597,14 +598,17 @@ export class BattlePass extends BaseContract {
 
   setPublicSaleConfig(
     timestamp: BigNumberish,
-    price: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setWhitelistSaleConfig(
+  "setWhitelistSaleConfig(uint32,address)"(
     timestamp: BigNumberish,
-    price: BigNumberish,
     signer: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "setWhitelistSaleConfig(uint64)"(
+    price: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -660,11 +664,10 @@ export class BattlePass extends BaseContract {
     config(
       overrides?: CallOverrides
     ): Promise<
-      [number, BigNumber, number, BigNumber, string] & {
+      [number, number, BigNumber, string] & {
         whitelistSaleStartTime: number;
-        whitelistPriceWei: BigNumber;
         publicSaleStartTime: number;
-        publicPriceWei: BigNumber;
+        priceWei: BigNumber;
         whitelistSigner: string;
       }
     >;
@@ -740,14 +743,17 @@ export class BattlePass extends BaseContract {
 
     setPublicSaleConfig(
       timestamp: BigNumberish,
-      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setWhitelistSaleConfig(
+    "setWhitelistSaleConfig(uint32,address)"(
       timestamp: BigNumberish,
-      price: BigNumberish,
       signer: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setWhitelistSaleConfig(uint64)"(
+      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -952,14 +958,17 @@ export class BattlePass extends BaseContract {
 
     setPublicSaleConfig(
       timestamp: BigNumberish,
-      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setWhitelistSaleConfig(
+    "setWhitelistSaleConfig(uint32,address)"(
       timestamp: BigNumberish,
-      price: BigNumberish,
       signer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "setWhitelistSaleConfig(uint64)"(
+      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1107,14 +1116,17 @@ export class BattlePass extends BaseContract {
 
     setPublicSaleConfig(
       timestamp: BigNumberish,
-      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setWhitelistSaleConfig(
+    "setWhitelistSaleConfig(uint32,address)"(
       timestamp: BigNumberish,
-      price: BigNumberish,
       signer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "setWhitelistSaleConfig(uint64)"(
+      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

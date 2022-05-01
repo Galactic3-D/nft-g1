@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/y/work/exv/battlepass/contracts/evm/contracts/exv.nft.battlepass.sol": {
-      "lastModificationDate": 1649795819264,
-      "contentHash": "18b6a3c7146cc63b5fef4667f7bb0bcc",
+      "lastModificationDate": 1651252585461,
+      "contentHash": "f02dcf8c53162337becc564e05fd05a0",
       "sourceName": "contracts/exv.nft.battlepass.sol",
       "solcConfig": {
         "version": "0.8.13",

@@ -18,10 +18,9 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
 
   struct SaleConfig {
     uint32 whitelistSaleStartTime;
-    uint64 whitelistPriceWei;
-
     uint32 publicSaleStartTime;
-    uint64 publicPriceWei;
+
+    uint64 priceWei;
 
     address whitelistSigner;
   }
@@ -31,24 +30,17 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
   uint256 internal immutable maxBatchSize;
 
   constructor(
-    string memory name_,
-    string memory symbol_,
-    uint256 maxBatchSize_,
-    uint256 collectionSize_,
-    uint256 amountForSaleAndDev_,
-    uint256 amountForDevs_
+    string memory name_, 
+    string memory symbol_
   )
   ERC721A(name_, symbol_)
   {
-    maxPerAddressDuringMint = maxBatchSize_;
-    amountForSaleAndDev = amountForSaleAndDev_;
-    amountForDevs = amountForDevs_;
-    maxBatchSize = maxBatchSize_;
-    collectionSize = collectionSize_;
-    require(
-      amountForSaleAndDev_ <= collectionSize_,
-      "larger collection size needed"
-    );
+    maxPerAddressDuringMint = 1;
+    amountForSaleAndDev = 2000;
+    amountForDevs = 50;
+    maxBatchSize = 5;
+    collectionSize = 2000;
+    config.priceWei = 0.1 ether;
   }
 
   modifier callerIsUser() {
@@ -65,7 +57,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     payable
     callerIsUser
   {
-    uint256 whitelistPrice = uint256(config.whitelistPriceWei);
+    uint256 whitelistPrice = uint256(config.priceWei);
     uint256 whitelistSaleStartTime = uint256(config.whitelistSaleStartTime);
 
     require(
@@ -107,7 +99,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     payable
     callerIsUser
   {
-    uint256 publicPrice = uint256(config.publicPriceWei);
+    uint256 publicPrice = uint256(config.priceWei);
     uint256 publicSaleStartTime = uint256(config.publicSaleStartTime);
 
     require(
@@ -146,27 +138,34 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     returns (uint256)
   {
     if(config.publicSaleStartTime > 0 && config.publicSaleStartTime < block.timestamp) {
-      return uint256(config.publicPriceWei);
+      return uint256(config.priceWei);
     }
 
-    return uint256(config.whitelistPriceWei);
+    return uint256(config.priceWei);
   }
 
-  function setWhitelistSaleConfig(uint32 timestamp, uint64 price, address signer)
+
+  function setWhitelistSaleConfig(uint64 price)
+    external
+    onlyOwner
+  {
+    config.priceWei = price;
+  }
+
+
+  function setWhitelistSaleConfig(uint32 timestamp, address signer)
     external
     onlyOwner
   {
     config.whitelistSaleStartTime = timestamp;
-    config.whitelistPriceWei = price;
     config.whitelistSigner = signer;
   }
 
-  function setPublicSaleConfig(uint32 timestamp, uint64 price)
+  function setPublicSaleConfig(uint32 timestamp)
     external
     onlyOwner 
   {
       config.publicSaleStartTime = timestamp;
-      config.publicPriceWei = price;
   }
 
   // For marketing etc.

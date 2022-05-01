@@ -58,7 +58,6 @@ let networks;
 if(PRIVATE_KEY) {
     let accounts = [
         PRIVATE_KEY,
-        PRIVATE_KEY_ADMIN1,
     ]
     networks = {
         hardhat: {},
