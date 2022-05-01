@@ -310,8 +310,8 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                 it("enough money", async function () {
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("0");
-                    await this.erc721a.connect(this.addr1).mint(2, {value: parseEther("4.0")});
-                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("2");
+                    await this.erc721a.connect(this.addr1).mint(1, {value: parseEther("4.0")});
+                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
                 });
 
                 it("not enough money", async function () {
@@ -323,13 +323,13 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                 });
 
                 it("get change", async function () {
-                    await this.erc721a.connect(this.addr1).mint(2, {value: parseEther("5.0")});
-                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("2");
+                    await this.erc721a.connect(this.addr1).mint(1, {value: parseEther("5.0")});
+                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
                 });
 
                 it("withdraw accumulated", async function () {
-                    await this.erc721a.connect(this.addr1).mint(2, {value: parseEther("5.0")});
-                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("2");
+                    await this.erc721a.connect(this.addr1).mint(1, {value: parseEther("5.0")});
+                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
                 });
 
                 it("change sale start date", async function () {

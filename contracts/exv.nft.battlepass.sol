@@ -35,11 +35,13 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
   )
   ERC721A(name_, symbol_)
   {
-    maxPerAddressDuringMint = maxBatchSize_;
+    maxPerAddressDuringMint = 1;
     amountForDevs = amountForDevs_;
     maxBatchSize = maxBatchSize_;
     collectionSize = collectionSize_;
     config.priceWei = 0.1 ether;
+    require(amountForDevs_ < collectionSize_);
+    require(maxBatchSize_ < collectionSize_);
   }
 
   modifier callerIsUser() {
