@@ -20,9 +20,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
   struct SaleConfig {
     uint32 whitelistSaleStartTime;
     uint32 publicSaleStartTime;
-
     uint64 priceWei;
-
     address whitelistSigner;
   }
 
@@ -41,6 +39,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     amountForDevs = amountForDevs_;
     maxBatchSize = maxBatchSize_;
     collectionSize = collectionSize_;
+    config.priceWei = 0.1 ether;
   }
 
   modifier callerIsUser() {
