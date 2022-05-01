@@ -14,7 +14,8 @@ import "hardhat/console.sol";
 contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
   uint256 public immutable maxPerAddressDuringMint;
   uint256 public immutable amountForDevs;
-  uint256 public immutable amountForSaleAndDev;
+  uint256 public immutable collectionSize;
+  uint256 public immutable maxBatchSize;
 
   struct SaleConfig {
     uint32 whitelistSaleStartTime;
@@ -26,21 +27,20 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
   }
 
   SaleConfig public config;
-  uint256 internal immutable collectionSize;
-  uint256 internal immutable maxBatchSize;
 
   constructor(
-    string memory name_, 
-    string memory symbol_
+    string memory name_,
+    string memory symbol_,
+    uint256 maxBatchSize_,
+    uint256 collectionSize_,
+    uint256 amountForDevs_
   )
   ERC721A(name_, symbol_)
   {
-    maxPerAddressDuringMint = 1;
-    amountForSaleAndDev = 2000;
-    amountForDevs = 50;
-    maxBatchSize = 5;
-    collectionSize = 2000;
-    config.priceWei = 0.1 ether;
+    maxPerAddressDuringMint = maxBatchSize_;
+    amountForDevs = amountForDevs_;
+    maxBatchSize = maxBatchSize_;
+    collectionSize = collectionSize_;
   }
 
   modifier callerIsUser() {
@@ -50,36 +50,33 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
 
   function whitelistMint(
       uint256 quantity,
-      uint256 maxPerWhitelistDuringMint,
       bytes memory signature
   )
     external
     payable
     callerIsUser
   {
-    uint256 whitelistPrice = uint256(config.priceWei);
+    uint256 price = uint256(config.priceWei);
     uint256 whitelistSaleStartTime = uint256(config.whitelistSaleStartTime);
 
     require(
-      isSaleOn(whitelistPrice, whitelistSaleStartTime),
+      isSaleOn(price, whitelistSaleStartTime),
       "whitelist sale has not begun yet"
     );
 
     require(
-      totalSupply() + quantity <= amountForSaleAndDev,
+      totalSupply() + quantity <= collectionSize,
       "not enough remaining reserved for sale to support desired mint amount"
     );
 
     require(
-      maxPerWhitelistDuringMint <= maxPerAddressDuringMint &&
-      numberMinted(msg.sender) + quantity <= maxPerWhitelistDuringMint,
+      numberMinted(msg.sender) + quantity <= 1,
       "can not mint this many"
     );
 
     bytes memory data = abi.encodePacked(
         AddressString.toAsciiString(msg.sender),
-        ":",
-        Strings.toString(maxPerWhitelistDuringMint)
+        ":1"
     );
     bytes32 hash = ECDSA.toEthSignedMessageHash(data);
     address signer = ECDSA.recover(hash, signature);
@@ -89,7 +86,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
         "wrong sig"
     );
 
-    uint256 totalCost = getPrice() * quantity;
+    uint256 totalCost = price * quantity;
     _safeMint(msg.sender, quantity);
     refundIfOver(totalCost);
   }
@@ -132,20 +129,8 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     return _price != 0 && _startTime != 0 && block.timestamp >= _startTime;
   }
 
-  function getPrice()
-    public
-    view
-    returns (uint256)
-  {
-    if(config.publicSaleStartTime > 0 && config.publicSaleStartTime < block.timestamp) {
-      return uint256(config.priceWei);
-    }
 
-    return uint256(config.priceWei);
-  }
-
-
-  function setWhitelistSaleConfig(uint64 price)
+  function setPrice(uint64 price)
     external
     onlyOwner
   {

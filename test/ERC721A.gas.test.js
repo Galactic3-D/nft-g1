@@ -40,5 +40,5 @@ const createTestSuite = ({ contract, constructorArgs }) =>
         });
     };
 
-describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 1000, 200, 200] }));
+describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 200, 200] }));
 

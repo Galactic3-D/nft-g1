@@ -103,9 +103,9 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                 beforeEach(async function () {
                     const [owner, signer, addr1] = await ethers.getSigners();
                     let currentTime = await getCurrentTimestamp();
+                    await this.erc721a.setPrice(parseEther("1"));
                     await this.erc721a.setWhitelistSaleConfig(
                         currentTime,
-                        parseEther("1.0"),
                         signer.address,
                     );
                     this.owner = owner;
@@ -118,12 +118,11 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
 
                     let signature = await this.signer.signMessage(
-                        `${this.addr1.address.toUpperCase()}:2`
+                        `${this.addr1.address.toUpperCase()}:1`
                     );
 
                     let tx = await this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     );
@@ -133,12 +132,11 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                 it("invalid signature", async function () {
                     let signature = await this.owner.signMessage(
-                        `${this.addr1.address.toUpperCase()}:2`
+                        `${this.addr1.address.toUpperCase()}:1`
                     );
 
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('wrong sig');
@@ -151,7 +149,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         2,
-                        1,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('can not mint this many');
@@ -164,7 +161,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         10,
-                        20,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('can not mint this many');
@@ -177,7 +173,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         10,
-                        20,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('can not mint this many');
@@ -189,12 +184,11 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
 
                     let signature = await this.signer.signMessage(
-                        `${this.addr1.address.toUpperCase()}:2`
+                        `${this.addr1.address.toUpperCase()}:1`
                     );
 
                     let tx = await this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     );
@@ -211,12 +205,11 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
 
                     let signature = await this.signer.signMessage(
-                        `${this.addr1.address.toUpperCase()}:2`
+                        `${this.addr1.address.toUpperCase()}:1`
                     );
 
                     await this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     );
@@ -224,13 +217,11 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     let currentTime = await getCurrentTimestamp();
                     await this.erc721a.setWhitelistSaleConfig(
                         currentTime + 60,
-                        parseEther("1.0"),
                         this.signer.address,
                     );
 
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('whitelist sale has not begun yet');
@@ -242,12 +233,11 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                 });
                 it("withdraw accumulated", async function () {
                     let signature = await this.signer.signMessage(
-                        `${this.addr1.address.toUpperCase()}:2`
+                        `${this.addr1.address.toUpperCase()}:1`
                     );
 
                     await this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     );
@@ -269,9 +259,9 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     this.addr1 = addr1;
                     this.signer = signer;
                     let currentTime = await getCurrentTimestamp();
+                    await this.erc721a.setPrice(parseEther("1"));
                     await this.erc721a.setWhitelistSaleConfig(
                         currentTime + 60,
-                        parseEther("1.0"),
                         this.signer.address,
                     );
 
@@ -279,11 +269,10 @@ const createTestSuite = ({ contract, constructorArgs }) =>
 
                 it("valid signature", async function () {
                     let signature = await this.signer.signMessage(
-                        `${this.addr1.address.toUpperCase()}:2`
+                        `${this.addr1.address.toUpperCase()}:1`
                     );
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('whitelist sale has not begun yet');
@@ -295,7 +284,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     );
                     await expect(this.erc721a.connect(this.addr1).whitelistMint(
                         1,
-                        2,
                         signature,
                         {value: parseEther("1.1")}
                     )).to.be.revertedWith('whitelist sale has not begun yet');
@@ -310,14 +298,13 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     this.addr2 = addr2;
                     this.signer = signer;
                     let currentTime = await getCurrentTimestamp();
+                    await this.erc721a.setPrice(parseEther("1"));
                     await this.erc721a.setWhitelistSaleConfig(
                         currentTime ,
-                        parseEther("1.0"),
                         this.signer.address,
                     );
                     await this.erc721a.setPublicSaleConfig(
                         currentTime,
-                        parseEther("2.0"),
                     );
                 });
 
@@ -330,7 +317,7 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                 it("not enough money", async function () {
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("0");
                     await expect(
-                        this.erc721a.connect(this.addr1).mint(2, {value: parseEther("3.0")})
+                        this.erc721a.connect(this.addr1).mint(1, {value: parseEther("0.3")})
                     ).to.be.revertedWith('Need to send more ETH.');
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("0");
                 });
@@ -351,11 +338,10 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     await this.erc721a.connect(this.addr1).mint(1, {value: parseEther("5.0")});
                     await this.erc721a.setPublicSaleConfig(
                         currentTime + 60,
-                        parseEther("2.0"),
                     );
                     await expect(
                         this.erc721a.connect(this.addr1).mint(
-                            2,
+                            1,
                             {value: parseEther("5.0")}
                         )
                     ).to.be.revertedWith('sale has not begun yet');
@@ -364,5 +350,5 @@ const createTestSuite = ({ contract, constructorArgs }) =>
         });
     };
 
-describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 200, 180, 20] }));
+describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 200, 20] }));
 

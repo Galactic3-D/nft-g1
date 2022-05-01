@@ -23,15 +23,15 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface BattlePassInterface extends ethers.utils.Interface {
   functions: {
     "amountForDevs()": FunctionFragment;
-    "amountForSaleAndDev()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "collectionSize()": FunctionFragment;
     "config()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getOwnershipData(uint256)": FunctionFragment;
-    "getPrice()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isSaleOn(uint256,uint256)": FunctionFragment;
+    "maxBatchSize()": FunctionFragment;
     "maxPerAddressDuringMint()": FunctionFragment;
     "mint(uint256)": FunctionFragment;
     "name()": FunctionFragment;
@@ -43,6 +43,7 @@ interface BattlePassInterface extends ethers.utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBaseURI(string)": FunctionFragment;
+    "setPrice(uint64)": FunctionFragment;
     "setPublicSaleConfig(uint32)": FunctionFragment;
     "setWhitelistSaleConfig(uint32,address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
@@ -52,7 +53,7 @@ interface BattlePassInterface extends ethers.utils.Interface {
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "whitelistMint(uint256,uint256,bytes)": FunctionFragment;
+    "whitelistMint(uint256,bytes)": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
@@ -61,14 +62,14 @@ interface BattlePassInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "amountForSaleAndDev",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "collectionSize",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "config", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -78,7 +79,6 @@ interface BattlePassInterface extends ethers.utils.Interface {
     functionFragment: "getOwnershipData",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "getPrice", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
@@ -86,6 +86,10 @@ interface BattlePassInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "isSaleOn",
     values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maxBatchSize",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "maxPerAddressDuringMint",
@@ -119,6 +123,10 @@ interface BattlePassInterface extends ethers.utils.Interface {
     values: [string, boolean]
   ): string;
   encodeFunctionData(functionFragment: "setBaseURI", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "setPrice",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "setPublicSaleConfig",
     values: [BigNumberish]
@@ -154,7 +162,7 @@ interface BattlePassInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "whitelistMint",
-    values: [BigNumberish, BigNumberish, BytesLike]
+    values: [BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
@@ -162,12 +170,12 @@ interface BattlePassInterface extends ethers.utils.Interface {
     functionFragment: "amountForDevs",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "amountForSaleAndDev",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "collectionSize",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "config", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
@@ -177,12 +185,15 @@ interface BattlePassInterface extends ethers.utils.Interface {
     functionFragment: "getOwnershipData",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isSaleOn", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "maxBatchSize",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "maxPerAddressDuringMint",
     data: BytesLike
@@ -209,6 +220,7 @@ interface BattlePassInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setPrice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setPublicSaleConfig",
     data: BytesLike
@@ -328,8 +340,6 @@ export class BattlePass extends BaseContract {
   functions: {
     amountForDevs(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    amountForSaleAndDev(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -337,6 +347,8 @@ export class BattlePass extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    collectionSize(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     config(
       overrides?: CallOverrides
@@ -367,8 +379,6 @@ export class BattlePass extends BaseContract {
       ]
     >;
 
-    getPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -380,6 +390,8 @@ export class BattlePass extends BaseContract {
       _startTime: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    maxBatchSize(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     maxPerAddressDuringMint(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -437,19 +449,19 @@ export class BattlePass extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setPrice(
+      price: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setPublicSaleConfig(
       timestamp: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "setWhitelistSaleConfig(uint32,address)"(
+    setWhitelistSaleConfig(
       timestamp: BigNumberish,
       signer: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    "setWhitelistSaleConfig(uint64)"(
-      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -483,7 +495,6 @@ export class BattlePass extends BaseContract {
 
     whitelistMint(
       quantity: BigNumberish,
-      maxPerWhitelistDuringMint: BigNumberish,
       signature: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -495,8 +506,6 @@ export class BattlePass extends BaseContract {
 
   amountForDevs(overrides?: CallOverrides): Promise<BigNumber>;
 
-  amountForSaleAndDev(overrides?: CallOverrides): Promise<BigNumber>;
-
   approve(
     to: string,
     tokenId: BigNumberish,
@@ -504,6 +513,8 @@ export class BattlePass extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  collectionSize(overrides?: CallOverrides): Promise<BigNumber>;
 
   config(
     overrides?: CallOverrides
@@ -532,8 +543,6 @@ export class BattlePass extends BaseContract {
     }
   >;
 
-  getPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
   isApprovedForAll(
     owner: string,
     operator: string,
@@ -545,6 +554,8 @@ export class BattlePass extends BaseContract {
     _startTime: BigNumberish,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  maxBatchSize(overrides?: CallOverrides): Promise<BigNumber>;
 
   maxPerAddressDuringMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -596,19 +607,19 @@ export class BattlePass extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setPrice(
+    price: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setPublicSaleConfig(
     timestamp: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "setWhitelistSaleConfig(uint32,address)"(
+  setWhitelistSaleConfig(
     timestamp: BigNumberish,
     signer: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  "setWhitelistSaleConfig(uint64)"(
-    price: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -639,7 +650,6 @@ export class BattlePass extends BaseContract {
 
   whitelistMint(
     quantity: BigNumberish,
-    maxPerWhitelistDuringMint: BigNumberish,
     signature: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -651,8 +661,6 @@ export class BattlePass extends BaseContract {
   callStatic: {
     amountForDevs(overrides?: CallOverrides): Promise<BigNumber>;
 
-    amountForSaleAndDev(overrides?: CallOverrides): Promise<BigNumber>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -660,6 +668,8 @@ export class BattlePass extends BaseContract {
     ): Promise<void>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    collectionSize(overrides?: CallOverrides): Promise<BigNumber>;
 
     config(
       overrides?: CallOverrides
@@ -688,8 +698,6 @@ export class BattlePass extends BaseContract {
       }
     >;
 
-    getPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -701,6 +709,8 @@ export class BattlePass extends BaseContract {
       _startTime: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    maxBatchSize(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxPerAddressDuringMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -741,19 +751,16 @@ export class BattlePass extends BaseContract {
 
     setBaseURI(baseURI: string, overrides?: CallOverrides): Promise<void>;
 
+    setPrice(price: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
     setPublicSaleConfig(
       timestamp: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setWhitelistSaleConfig(uint32,address)"(
+    setWhitelistSaleConfig(
       timestamp: BigNumberish,
       signer: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setWhitelistSaleConfig(uint64)"(
-      price: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -784,7 +791,6 @@ export class BattlePass extends BaseContract {
 
     whitelistMint(
       quantity: BigNumberish,
-      maxPerWhitelistDuringMint: BigNumberish,
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -867,8 +873,6 @@ export class BattlePass extends BaseContract {
   estimateGas: {
     amountForDevs(overrides?: CallOverrides): Promise<BigNumber>;
 
-    amountForSaleAndDev(overrides?: CallOverrides): Promise<BigNumber>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -876,6 +880,8 @@ export class BattlePass extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    collectionSize(overrides?: CallOverrides): Promise<BigNumber>;
 
     config(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -889,8 +895,6 @@ export class BattlePass extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -902,6 +906,8 @@ export class BattlePass extends BaseContract {
       _startTime: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    maxBatchSize(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxPerAddressDuringMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -956,19 +962,19 @@ export class BattlePass extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setPrice(
+      price: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setPublicSaleConfig(
       timestamp: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "setWhitelistSaleConfig(uint32,address)"(
+    setWhitelistSaleConfig(
       timestamp: BigNumberish,
       signer: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    "setWhitelistSaleConfig(uint64)"(
-      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1002,7 +1008,6 @@ export class BattlePass extends BaseContract {
 
     whitelistMint(
       quantity: BigNumberish,
-      maxPerWhitelistDuringMint: BigNumberish,
       signature: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1015,10 +1020,6 @@ export class BattlePass extends BaseContract {
   populateTransaction: {
     amountForDevs(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    amountForSaleAndDev(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -1029,6 +1030,8 @@ export class BattlePass extends BaseContract {
       owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    collectionSize(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     config(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1042,8 +1045,6 @@ export class BattlePass extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -1055,6 +1056,8 @@ export class BattlePass extends BaseContract {
       _startTime: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    maxBatchSize(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maxPerAddressDuringMint(
       overrides?: CallOverrides
@@ -1114,19 +1117,19 @@ export class BattlePass extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setPrice(
+      price: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setPublicSaleConfig(
       timestamp: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "setWhitelistSaleConfig(uint32,address)"(
+    setWhitelistSaleConfig(
       timestamp: BigNumberish,
       signer: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "setWhitelistSaleConfig(uint64)"(
-      price: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1160,7 +1163,6 @@ export class BattlePass extends BaseContract {
 
     whitelistMint(
       quantity: BigNumberish,
-      maxPerWhitelistDuringMint: BigNumberish,
       signature: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
