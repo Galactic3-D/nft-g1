@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "./library/AddressString.sol";
-import "hardhat/console.sol";
 
 
 contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
