@@ -53,6 +53,7 @@ const createTestSuite = ({ contract, constructorArgs }) =>
             });
 
             context("reserve", async function () {
+
                 it("in valid range and batch size", async function () {
                     expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("0");
                     expect(await this.erc721a.totalMinted()).to.equal("0");
@@ -68,7 +69,6 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     await expect(this.erc721a.reserve(6)).to.be.revertedWith('can only mint a multiple of the maxBatchSize');
                     expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("0");
                     expect(await this.erc721a.totalMinted()).to.equal("0");
-
                 });
 
                 it("over range, but valid batch size", async function () {
@@ -250,6 +250,26 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     const contractBalanceAfter = await ethers.provider.getBalance(this.erc721a.address);
                     expect(contractBalanceAfter).to.be.equal(parseEther('0'));
                     expect((userBalanceAfter-userBalanceBefore)/1e18).to.be.greaterThan(0);
+                });
+
+                it("reserve and mint", async function () {
+                    await this.erc721a.reserve(20);
+                    expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("20");
+                    expect(await this.erc721a.totalMinted()).to.equal("20");
+
+
+                    let signature = await this.signer.signMessage(
+                        `${this.addr1.address.toUpperCase()}:1`
+                    );
+
+                    await this.erc721a.connect(this.addr1).whitelistMint(
+                        1,
+                        signature,
+                        {value: parseEther("1.1")}
+                    );
+                    expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
+                    expect(await this.erc721a.ownerOf("21")).to.equal(this.addr1.address);
+                    expect(await this.erc721a.totalMinted()).to.equal("21");
                 });
             });
 

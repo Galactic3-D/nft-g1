@@ -61,10 +61,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BattlePass__factory>;
     getContractFactory(
-      name: "BattlePassProxy",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.BattlePassProxy__factory>;
-    getContractFactory(
       name: "ERC721ReceiverMock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721ReceiverMock__factory>;
@@ -137,11 +133,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.BattlePass>;
-    getContractAt(
-      name: "BattlePassProxy",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.BattlePassProxy>;
     getContractAt(
       name: "ERC721ReceiverMock",
       address: string,
