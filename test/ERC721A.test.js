@@ -91,10 +91,10 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     await this.erc721a.reserve(5);
                     await this.erc721a.connect(this.owner).setApprovalForAll(this.addr1.address, true);
                     expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("5");
-                    expect(await this.erc721a.ownerOf("1")).to.equal(this.owner.address);
-                    this.transferTx = await this.erc721a.connect(this.addr1).transferFrom(this.owner.address, this.addr1.address, 1);
+                    expect(await this.erc721a.ownerOf("2")).to.equal(this.owner.address);
+                    this.transferTx = await this.erc721a.connect(this.addr1).transferFrom(this.owner.address, this.addr1.address, 2);
                     expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("4");
-                    expect(await this.erc721a.ownerOf("1")).to.equal(this.addr1.address);
+                    expect(await this.erc721a.ownerOf("2")).to.equal(this.addr1.address);
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
                 });
             });
@@ -127,7 +127,7 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                         {value: parseEther("1.1")}
                     );
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
-                    expect(await this.erc721a.ownerOf("0")).to.equal(this.addr1.address);
+                    expect(await this.erc721a.ownerOf("1")).to.equal(this.addr1.address);
                 });
 
                 it("invalid signature", async function () {
@@ -194,10 +194,10 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                     );
                     await this.erc721a.connect(this.addr1).setApprovalForAll(this.signer.address, true);
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("1");
-                    await this.erc721a.connect(this.signer).transferFrom(this.addr1.address, this.signer.address, 0);
+                    await this.erc721a.connect(this.signer).transferFrom(this.addr1.address, this.signer.address, 1);
                     expect(await this.erc721a.balanceOf(this.addr1.address)).to.equal("0");
                     expect(await this.erc721a.balanceOf(this.signer.address)).to.equal("1");
-                    expect(await this.erc721a.ownerOf("0")).to.equal(this.signer.address);
+                    expect(await this.erc721a.ownerOf("1")).to.equal(this.signer.address);
                 });
 
                 it("change sale start date", async function () {

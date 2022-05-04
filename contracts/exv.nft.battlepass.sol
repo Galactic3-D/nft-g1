@@ -39,13 +39,18 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     collectionSize = collectionSize_;
     maxPerAddressDuringMint = 1;
     config.priceWei = 0.1 ether;
-    require(amountForDevs_ < collectionSize_);
-    require(maxBatchSize_ < collectionSize_);
+    require(amountForDevs_ <= collectionSize_);
+    require(maxBatchSize_ <= collectionSize_);
   }
 
   modifier callerIsUser() {
     require(tx.origin == msg.sender, "The caller is another contract");
     _;
+  }
+
+
+  function _startTokenId() internal override view virtual returns (uint256) {
+      return 1;
   }
 
   function whitelistMint(

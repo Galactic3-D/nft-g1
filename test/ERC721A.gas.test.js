@@ -15,6 +15,10 @@ let getCurrentTimestamp = async () => {
     return blockBefore.timestamp;
 }
 
+function range(start, end) {
+    return Array.from({ length: end - start + 1 }, (_, i) => i)
+}
+
 const createTestSuite = ({ contract, constructorArgs }) =>
     function () {
         context(`${contract}`, function () {
@@ -32,13 +36,16 @@ const createTestSuite = ({ contract, constructorArgs }) =>
                 it("in valid range and batch size", async function () {
                     expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("0");
                     expect(await this.erc721a.totalMinted()).to.equal("0");
-                    await this.erc721a.reserve(100);
-                    expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("100");
+                    for(var i in range(1,20)) {
+                        await this.erc721a.reserve(100);
+                    }
+                    expect(await this.erc721a.balanceOf(this.owner.address)).to.equal("2000");
+                    await expect(this.erc721a.reserve(1)).to.be.revertedWith("too many already minted before dev mint");
                 });
             });
 
         });
     };
 
-describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 200, 100] }));
+describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 2000, 2000] }));
 
