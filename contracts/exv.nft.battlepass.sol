@@ -48,7 +48,6 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     _;
   }
 
-
   function _startTokenId() internal override view virtual returns (uint256) {
       return 1;
   }
