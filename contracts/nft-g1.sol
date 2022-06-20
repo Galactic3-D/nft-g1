@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./library/AddressString.sol";
 
 
-contract NftG1 is Ownable, ERC721A, ReentrancyGuard {
+contract NFTG0RARE is Ownable, ERC721A, ReentrancyGuard {
   uint256 public immutable maxPerAddressDuringMint;
   uint256 public immutable reserved;
   uint256 public immutable collectionSize;

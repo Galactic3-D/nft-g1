@@ -14,7 +14,8 @@ import "@tenderly/hardhat-tenderly";
 import "hardhat-tracer";
 import "hardhat-dependency-compiler";
 import "hardhat-deploy";
-const { getAccount } = require("./scripts/helpers");
+
+const {getAccount} = require("./scripts/helpers");
 
 
 if (process.env.REPORT_GAS) {
@@ -35,7 +36,6 @@ let {
 } = process.env;
 
 
-
 task("accounts", "Prints the list of accounts", async (args, {ethers}) => {
     const accounts = await ethers.getSigners();
 
@@ -46,8 +46,8 @@ task("accounts", "Prints the list of accounts", async (args, {ethers}) => {
 
 
 task("check-balance", "Prints out the balance of your account").setAction(async function (taskArguments, hre) {
-	const account = getAccount();
-	console.log(`Account balance for ${account.address}: ${await account.getBalance()}`);
+    const account = getAccount();
+    console.log(`Account balance for ${account.address}: ${await account.getBalance()}`);
 });
 
 // You need to export an object to set up your config
@@ -85,14 +85,18 @@ module.exports = {
     },
     dependencyCompiler: {},
     namedAccounts: {
-        deployer: 0,
-        admin1: 1,    // '0x51d9255fBb24238d8E8a841Dcb47ea67c95C98ca',
+        deployer: {
+            4: '0x0cf672322c793AEDBfe231F0c580711918C6B02B',
+        },
+        feeCollector: {
+            4: '0x203E7262a0D14b75b17B2FA944d95Cfc16666Bf1',
+        }
     },
     abiExporter: {
         path: './artifacts/abi',
         clear: true,
         flat: true,
-        only: [':EXVBattlePass'],
+        only: [':NFTG0RARE'],
         spacing: 2
     },
     gasReporter: {
