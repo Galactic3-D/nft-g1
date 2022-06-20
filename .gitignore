@@ -1,2 +1,12 @@
 node_modules
 .git
+artifacts
+deployments
+cache
+.env
+package-lock.json
+yarn.lock
+src/types
+.gitignore
+.idea
+

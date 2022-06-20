@@ -47,5 +47,5 @@ const createTestSuite = ({ contract, constructorArgs }) =>
         });
     };
 
-describe("ERC721A", createTestSuite({ contract: "BattlePass", constructorArgs: ["NAME", "SYMBOL", 5, 2000, 2000] }));
+describe("ERC721A", createTestSuite({ contract: "NftG1", constructorArgs: ["NAME", "SYMBOL", 5, 2000, 2000] }));
 

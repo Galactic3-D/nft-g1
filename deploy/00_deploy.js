@@ -2,9 +2,9 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
   const {deploy} = deployments;
   const {deployer} = await getNamedAccounts();
-  await deploy('BattlePass', {
+  await deploy('NftG1', {
     from: deployer,
-    args: ["NAME#2", "SYMBOL#2", 5, 2000, 50],
+    args: ["NFTG0RARE", "RARES", 100, 10000, 90],
     log: true,
   });
 };

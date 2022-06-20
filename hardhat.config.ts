@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 
 import * as _ from 'lodash';
-import { types, task } from "hardhat/config";
+import {types, task} from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-etherscan";
@@ -14,6 +14,8 @@ import "@tenderly/hardhat-tenderly";
 import "hardhat-tracer";
 import "hardhat-dependency-compiler";
 import "hardhat-deploy";
+const { getAccount } = require("./scripts/helpers");
+
 
 if (process.env.REPORT_GAS) {
     require('hardhat-gas-reporter');
@@ -23,28 +25,29 @@ if (process.env.REPORT_COVERAGE) {
     require('solidity-coverage');
 }
 
-require('dotenv').config();
+const dotenv = require("dotenv")
+dotenv.config()
 
-let { 
+let {
     ETHERSCAN_TOKEN,
     PRIVATE_KEY,
-    PRIVATE_KEY_ADMIN1,
+    ALCHEMY_KEY
 } = process.env;
 
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-const AccessType = Object.freeze({
-    OPEN: 0,
-    NON_CONTRACT: 1,
-    LIMIT: 2
-});
 
 
-task("accounts", "Prints the list of accounts", async (args, { ethers }) => {
+task("accounts", "Prints the list of accounts", async (args, {ethers}) => {
     const accounts = await ethers.getSigners();
 
     for (const account of accounts) {
         console.log(account.address);
     }
+});
+
+
+task("check-balance", "Prints out the balance of your account").setAction(async function (taskArguments, hre) {
+	const account = getAccount();
+	console.log(`Account balance for ${account.address}: ${await account.getBalance()}`);
 });
 
 // You need to export an object to set up your config
@@ -53,30 +56,10 @@ task("accounts", "Prints the list of accounts", async (args, { ethers }) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
-let networks;
-
-if(PRIVATE_KEY) {
-    let accounts = [
-        PRIVATE_KEY,
-    ]
-    networks = {
-        hardhat: {},
-        rinkeby: {
-            url: "https://eth-rinkeby.alchemyapi.io/v2/v92DVe9FFvr2lzRB4wjtk-z4DdsQjBhs",
-            gasPrice: 5000000000,
-            chainId: 4,
-            accounts
-        },
-    };
-} else {
-    networks = {
-        hardhat: {},
-    };
-}
 
 module.exports = {
     solidity: {
-        version: "0.8.13",
+        version: "0.8.14",
         settings: {
             optimizer: {
                 enabled: true,
@@ -85,12 +68,22 @@ module.exports = {
         }
     },
     defaultNetwork: "hardhat",
-    networks: networks,
+    networks: {
+        hardhat: {},
+        rinkeby: {
+            url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_KEY}`,
+            accounts: [`0x${PRIVATE_KEY}`]
+        },
+        ethereum: {
+            chainId: 1,
+            url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
+            accounts: [`0x${PRIVATE_KEY}`]
+        },
+    },
     etherscan: {
         apiKey: ETHERSCAN_TOKEN
     },
-    dependencyCompiler: {
-    },
+    dependencyCompiler: {},
     namedAccounts: {
         deployer: 0,
         admin1: 1,    // '0x51d9255fBb24238d8E8a841Dcb47ea67c95C98ca',

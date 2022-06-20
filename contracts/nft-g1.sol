@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED 
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -10,9 +10,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./library/AddressString.sol";
 
 
-contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
+contract NftG1 is Ownable, ERC721A, ReentrancyGuard {
   uint256 public immutable maxPerAddressDuringMint;
-  uint256 public immutable amountForDevs;
+  uint256 public immutable reserved;
   uint256 public immutable collectionSize;
   uint256 public immutable maxBatchSize;
 
@@ -30,16 +30,16 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     string memory symbol_,
     uint256 maxBatchSize_,
     uint256 collectionSize_,
-    uint256 amountForDevs_
+    uint256 reserved_
   )
   ERC721A(name_, symbol_)
   {
-    amountForDevs = amountForDevs_;
+    reserved = reserved_;
     maxBatchSize = maxBatchSize_;
     collectionSize = collectionSize_;
-    maxPerAddressDuringMint = 1;
+    maxPerAddressDuringMint = 3;
     config.priceWei = 0.1 ether;
-    require(amountForDevs_ <= collectionSize_);
+    require(reserved_ <= collectionSize_);
     require(maxBatchSize_ <= collectionSize_);
   }
 
@@ -87,7 +87,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
 
     require(
         signer == config.whitelistSigner,
-        "wrong sig"
+        "wrong signature"
     );
 
     uint256 totalCost = price * quantity;
@@ -152,7 +152,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
 
   function setPublicSaleConfig(uint32 timestamp)
     external
-    onlyOwner 
+    onlyOwner
   {
       config.publicSaleStartTime = timestamp;
   }
@@ -163,7 +163,7 @@ contract BattlePass is Ownable, ERC721A, ReentrancyGuard {
     onlyOwner
   {
     require(
-      totalSupply() + quantity <= amountForDevs,
+      totalSupply() + quantity <= reserved,
       "too many already minted before dev mint"
     );
     require(

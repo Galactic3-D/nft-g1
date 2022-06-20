@@ -17,26 +17,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable__factory>;
     getContractFactory(
-      name: "IERC1822Proxiable",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC1822Proxiable__factory>;
-    getContractFactory(
-      name: "IBeacon",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IBeacon__factory>;
-    getContractFactory(
-      name: "ERC1967Proxy",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC1967Proxy__factory>;
-    getContractFactory(
-      name: "ERC1967Upgrade",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC1967Upgrade__factory>;
-    getContractFactory(
-      name: "Proxy",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Proxy__factory>;
-    getContractFactory(
       name: "IERC721Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Metadata__factory>;
@@ -57,10 +37,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
-      name: "BattlePass",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.BattlePass__factory>;
-    getContractFactory(
       name: "ERC721ReceiverMock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721ReceiverMock__factory>;
@@ -68,6 +44,10 @@ declare module "hardhat/types/runtime" {
       name: "StartTokenIdHelper",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.StartTokenIdHelper__factory>;
+    getContractFactory(
+      name: "NftG1",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.NftG1__factory>;
     getContractFactory(
       name: "ERC721A",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -78,31 +58,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Ownable>;
-    getContractAt(
-      name: "IERC1822Proxiable",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC1822Proxiable>;
-    getContractAt(
-      name: "IBeacon",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IBeacon>;
-    getContractAt(
-      name: "ERC1967Proxy",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC1967Proxy>;
-    getContractAt(
-      name: "ERC1967Upgrade",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC1967Upgrade>;
-    getContractAt(
-      name: "Proxy",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Proxy>;
     getContractAt(
       name: "IERC721Metadata",
       address: string,
@@ -129,11 +84,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC165>;
     getContractAt(
-      name: "BattlePass",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.BattlePass>;
-    getContractAt(
       name: "ERC721ReceiverMock",
       address: string,
       signer?: ethers.Signer
@@ -143,6 +93,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.StartTokenIdHelper>;
+    getContractAt(
+      name: "NftG1",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.NftG1>;
     getContractAt(
       name: "ERC721A",
       address: string,
